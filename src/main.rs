@@ -57,7 +57,7 @@ fn main() {
     let mut insert_max = 0;
 
     for _i in 0..attempts {
-        let index: usize = n - 1 - (random::<usize>() % n);
+        let index: usize = 2 * n - 1 - (random::<usize>() % n);
         hashmap.contains(&dnis[index]);
         let comparisons = DNI::get_comparisons();
         if insert_min > comparisons {
