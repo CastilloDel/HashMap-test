@@ -1,9 +1,9 @@
-mod hashmap;
 mod dni;
-use hashmap::{HashMap, HashType, ProbeType};
+mod hashmap;
 use dni::DNI;
-use std::io;
+use hashmap::{HashMap, HashType, ProbeType};
 use rand::random;
+use std::io;
 
 fn main() {
     println!("Introduce the size of the HashMap: ");
@@ -15,17 +15,17 @@ fn main() {
     println!("Introduce the load factor: ");
     let load_factor: f64 = read_between(0.0, 1.0);
     let mut hashmap = HashMap::<DNI>::new(size, cell_size, HashType::Modulo, ProbeType::Lineal);
-    
+
     let n: usize = (load_factor * size as f64 * cell_size as f64) as usize;
     let mut dnis = Vec::new();
-    for _i in 0..2*n {
+    for _i in 0..2 * n {
         dnis.push(DNI::new());
     }
 
     for i in 0..n {
         loop {
             if let Err(_) = hashmap.insert(&dnis[i]) {
-                dnis[i] = DNI::new(); 
+                dnis[i] = DNI::new();
             } else {
                 break;
             }
@@ -72,12 +72,18 @@ fn main() {
     insert_mean /= attempts as f64;
 
     println!("Search");
-    println!("Min:{}\tMax:{}\tMean:{}", search_min, search_max, search_mean);
+    println!(
+        "Min:{}\tMax:{}\tMean:{}",
+        search_min, search_max, search_mean
+    );
     println!("Insert");
-    println!("Min:{}\tMax:{}\tMean:{}", insert_min, insert_max, insert_mean);
+    println!(
+        "Min:{}\tMax:{}\tMean:{}",
+        insert_min, insert_max, insert_mean
+    );
 }
 
-fn read_between<T>(lower: T, upper: T) -> T 
+fn read_between<T>(lower: T, upper: T) -> T
 where
     T: std::str::FromStr + PartialOrd + std::fmt::Display + std::fmt::Debug,
     <T as std::str::FromStr>::Err: std::fmt::Debug,

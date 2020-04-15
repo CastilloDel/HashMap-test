@@ -39,7 +39,7 @@ impl<T> HashMap<T>
 where
     T: PartialEq + Into<usize> + Clone,
 {
-     pub fn new(
+    pub fn new(
         size: usize,
         cell_size: usize,
         hash_type: HashType,
@@ -51,32 +51,26 @@ where
         }
         let hash_fn: Box<dyn Fn(&T) -> usize> = match hash_type {
             HashType::Modulo => Box::new(|key| key.clone().into()),
-            HashType::Sum => {
-                Box::new(|key| {
-                    let mut total = key.clone().into();
-                    let mut sum = 0;
-                    while total > 0 {
-                        sum += total % 10;
-                        total /= 10;
-                    }
-                    sum
-                })
-            }
-            HashType::Pseudorandom => {
-                Box::new(|_| {
-                    random()
-                })
-            }
+            HashType::Sum => Box::new(|key| {
+                let mut total = key.clone().into();
+                let mut sum = 0;
+                while total > 0 {
+                    sum += total % 10;
+                    total /= 10;
+                }
+                sum
+            }),
+            HashType::Pseudorandom => Box::new(|_| random()),
         };
         let probe_fn: Box<dyn Fn(&T, usize) -> usize> = match probe_type {
             ProbeType::Lineal => Box::new(|_, i| i),
             ProbeType::Quadratic => Box::new(|_, i| i * i),
             ProbeType::DoubleHash => Box::new(|_, i| i * random::<usize>()),
         };
-        HashMap { 
-           cells: vec,
+        HashMap {
+            cells: vec,
             hash: hash_fn,
-            probe: probe_fn
+            probe: probe_fn,
         }
     }
 
